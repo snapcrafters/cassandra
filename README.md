@@ -1,4 +1,6 @@
-# Cassandra snap
+# Cassandra
+
+[![Snap Status](https://build.snapcraft.io/badge/snapcrafters/cassandra.svg)](https://build.snapcraft.io/user/snapcrafters/cassandra)
 
 This is a confined snap of Apache Cassandra. To build it, run `snapcraft` in this directory on Ubuntu 16.04 or later.
 
