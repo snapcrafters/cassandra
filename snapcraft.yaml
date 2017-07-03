@@ -1,0 +1,96 @@
+name: cassandra
+version: 3.7
+summary: Cassandra distributed database
+description: The Apache Cassandra database
+confinement: strict
+grade: stable
+apps:
+    cassandra:
+        command: wrapper-cassandra
+        daemon: forking
+        # mount-observe and process-control need to be manually connected
+        # post-install:
+        # `sudo snap connect cassandra:mount-observe ubuntu-core:mount-observe`
+        plugs:
+          - network
+          - network-bind
+          # Needed for checking available space in the data directories
+          # (java.io.File.getTotalSpace).
+          - mount-observe
+    nodetool:
+        command: wrapper-nodetool
+        plugs:
+          - network
+
+    # Helpers. These will go away when snapd provides a config interface.
+    # Deployment tools can use these to avoid hardcoding paths.
+    config-get:
+        # cassandra.config-get: fetch a configuration file from CASSANDRA_CONF.
+        command: config-get
+    config-set:
+        # cassandra.config-set: place a configuration file in CASSANDRA_CONF.
+        command: config-set
+    env-get:
+        # cassandra.env-get: print the value of an environment variable,
+        # e.g. CASSANDRA_DATA.
+        command: env-get
+parts:
+    cassandra:
+        plugin: ant
+        ant-properties:
+            dist.dir: $SNAPCRAFT_PART_INSTALL
+        ant-build-targets:
+            - artifacts
+        source: https://github.com/apache/cassandra
+        source-tag: cassandra-3.7
+        source-type: git
+        stage-packages:
+            # Copy some packages into the stage directory to steal their
+            # pre-built binaries.
+            - mawk
+            - grep
+            # For free(1)
+            - procps
+        organize:
+            # Rename directories into their expected locations. Analogous to
+            # Debian's .install files.
+            conf: etc/cassandra
+            bin/cassandra: usr/sbin/cassandra
+            lib: usr/share/cassandra/lib
+            # Rename mawk to awk instead of shipping a symlink.
+            usr/bin/mawk: usr/bin/awk
+        snap:
+            # Files from the stage directory to include in the snap.
+            - bin/nodetool
+            - etc/cassandra
+            - usr/sbin/cassandra
+            - usr/share/cassandra/lib/*.jar
+            - usr/lib/jvm
+            # awk, grep, and free are needed by cassandra-env.sh
+            - usr/bin/awk
+            - bin/grep
+            - usr/bin/free
+    glue:
+        plugin: dump
+        source: .
+        organize:
+            # Snaps are confined within:
+            # - /snap/$name/$revision (RO mounted squashfs)
+            # - /var/snap/$name/$revision (RW area for persisting data,
+            #                              copied between upgrades)
+            #
+            # The following wrapper scripts set some environment variables to
+            # point Cassandra at the right locations for jars, the data
+            # directory, logs, etc.
+            wrapper-cassandra: bin/wrapper-cassandra
+            wrapper-nodetool: bin/wrapper-nodetool
+            # Helpers. Again, these will go away when snapd provides a config
+            # interface.
+            config-get: bin/config-get
+            config-set: bin/config-set
+            env-get: bin/env-get
+            common: bin/common
+        snap:
+            - bin/*
+
+# vim: set ai et sts=4 tabstop=4 sw=4:

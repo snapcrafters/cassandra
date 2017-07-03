@@ -1,0 +1,38 @@
+#!/bin/sh -e
+
+. "$(dirname "$0")/common"
+
+usage () {
+    err "This tool lets you get files from the Cassandra config directory:"
+    err "\`sudo /snap/bin/cassandra.config-get cassandra.yaml\`"
+}
+
+err () {
+    echo "$1" >&2
+}
+
+if [ -z "$CASSANDRA_CONF" ]; then
+    err "CASSANDRA_CONF not set."
+    exit 1
+fi
+
+if [ $(id -u) != 0 ]; then
+    err "Please re-run as root."
+    err
+    usage
+    exit 1
+fi
+
+if [ -z "$1" ]; then
+    usage
+    exit 1
+fi
+
+if [ ! -f "$CASSANDRA_CONF/$1" ]; then
+    err "$1 does not exist."
+    err
+    usage
+    exit 1
+fi
+
+cat $CASSANDRA_CONF/$1
