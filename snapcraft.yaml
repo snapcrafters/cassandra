@@ -1,15 +1,23 @@
 name: cassandra
-version: 3.7
-summary: Cassandra distributed database
-description: The Apache Cassandra database
+version: '3.11.0'
+summary: Manage massive amounts of data, fast, without losing sleep
+description: |
+  The Apache Cassandra database is the right choice when you need
+  scalability and high availability without compromising performance. Linear
+  scalability and proven fault-tolerance on commodity hardware or cloud
+  infrastructure make it the perfect platform for mission-critical
+  data.Cassandra's support for replicating across multiple datacenters is
+  best-in-class, providing lower latency for your users and the peace of
+  mind of knowing that you can survive regional outages.
+
 confinement: strict
 grade: stable
+
 apps:
     cassandra:
         command: wrapper-cassandra
         daemon: forking
-        # mount-observe and process-control need to be manually connected
-        # post-install:
+        # mount-observe needs to be manually connected post-install:
         # `sudo snap connect cassandra:mount-observe ubuntu-core:mount-observe`
         plugs:
           - network
@@ -42,8 +50,12 @@ parts:
         ant-build-targets:
             - artifacts
         source: https://github.com/apache/cassandra
-        source-tag: cassandra-3.7
+        source-tag: cassandra-3.11.0
         source-type: git
+        build-packages:
+            - ant-optional
+            - build-essential
+            - python
         stage-packages:
             # Copy some packages into the stage directory to steal their
             # pre-built binaries.
@@ -59,7 +71,7 @@ parts:
             lib: usr/share/cassandra/lib
             # Rename mawk to awk instead of shipping a symlink.
             usr/bin/mawk: usr/bin/awk
-        snap:
+        prime:
             # Files from the stage directory to include in the snap.
             - bin/nodetool
             - etc/cassandra
@@ -90,7 +102,7 @@ parts:
             config-set: bin/config-set
             env-get: bin/env-get
             common: bin/common
-        snap:
+        prime:
             - bin/*
 
 # vim: set ai et sts=4 tabstop=4 sw=4:
