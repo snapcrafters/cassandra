@@ -2,8 +2,7 @@
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Cassandra_logo.svg/1280px-Cassandra_logo.svg.png" alt="Cassandra" height="256px">
 </h1>
 
-<p align="center"><b>This is the snap for Cassandra</b>, a highly-scalable partitioned row store. It works on Ubuntu, Fedora, Debian, and other major Linux
-distributions.</p>
+<p align="center"><b>This is the snap for Cassandra</b>, a highly-scalable partitioned row store. It works on Ubuntu, Fedora, Debian, and other major Linux distributions.</p>
 <p align="center">
 <a href="https://build.snapcraft.io/user/snapcrafters/cassandra"><img src="https://build.snapcraft.io/badge/snapcrafters/cassandra.svg" alt="Snap Status"></a><br>(<a href="https://bugs.launchpad.net/launchpad/+bug/1702130">bug #1702130</a>)
 </p>
@@ -27,9 +26,7 @@ Set a custom configuration:
 
 ## Remaining tasks
 
-Snapcrafters ([join us]()) are working to land snap install documentation and
-the [snapcraft.yaml](https://github.com/snapcrafters/discord/blob/master/snap/snapcraft.yaml)
-upstream so Discord can authoritatively publish future releases.
+Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) are working to land snap install documentation and the [snapcraft.yaml](https://github.com/snapcrafters/discord/blob/master/snap/snapcraft.yaml) upstream so Discord can authoritatively publish future releases.
 
   - [x] Fork the [Snapcrafters template]() repository to your own GitHub account
   - [x] Create a snap that runs in `devmode`
