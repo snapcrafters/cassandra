@@ -9,8 +9,8 @@
 
 ## Install
 
-    sudo snap install cassandra
-    snap connect cassandra:mount-observe ubuntu-core:mount-observe
+    snap install cassandra
+    snap connect cassandra:mount-observe
 
 ([Don't have snapd installed?](https://snapcraft.io/docs/core/install))
 
@@ -38,19 +38,19 @@ Snapcrafters ([join us](https://forum.snapcraft.io/t/join-snapcrafters/1325)) ar
   - [x] Convert the snap to `strict` confinement, or `classic` confinement if it qualifies
   - [x] Publish the confined snap in the Snap store beta channel
   - [x] Update the install instructions in this `README.md`
-  - [ ] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
+  - [-] Post a call for testing on the [Snapcraft Forum](https://forum.snapcraft.io)
   - [x] Request your GitHub repository is forked to the Snapcrafters organisation and configured for automated builds
   - [x] Add the provided Snapcraft build badge to this `README.md`
   - [x] Publish the snap in the Snap store stable channel
   - [x] Update the install instructions in this `README.md`
-  - [ ] Post an announcement in the [Snapcraft Forum](https://forum.snapcraft.io) - [link]()
-  - [ ] Submit a pull request or patch upstream that adds snap install documentation - [link]()
-  - [ ] Submit a pull request or patch upstream that adds the `snapcraft.yaml` and any required assets/launchers - [link]()
+  - [-] Post an announcement in the [Snapcraft Forum](https://forum.snapcraft.io)
+  - [ ] Submit a pull request or patch upstream that adds snap install documentation
+  - [ ] Submit a pull request or patch upstream that adds the `snapcraft.yaml` and any required assets/launchers
   - If upstream accept the PR:
     - [ ] Request upstream create a Snap store account
     - [ ] Add upstream contact information to the `README.md`
     - [ ] Contact the Snap Advocacy team to request the snap be transferred to upstream
- - [ ] Ask the Snap Advocacy team to celebrate the snap - [link](https://insights.ubuntu.com/2017/05/04/discord-is-now-available-as-a-snap-for-ubuntu-and-other-distributions/)
+ - [-] Ask the Snap Advocacy team to celebrate the snap
 
 If you have any questions, [post in the Snapcraft forum](https://forum.snapcraft.io).
 
