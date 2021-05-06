@@ -1,6 +1,7 @@
 name: cassandra
-version: latest
-version-script: git -C parts/cassandra/build describe --tags | sed 's/cassandra-//'
+# Set the version during the build based on a tag name
+adopt-info: cassandra
+base: core18
 summary: Manage massive amounts of data, fast, without losing sleep
 description: |
   The Apache Cassandra database is the right choice when you need
@@ -11,8 +12,8 @@ description: |
   best-in-class, providing lower latency for your users and the peace of
   mind of knowing that you can survive regional outages.
 
-confinement: strict
-grade: stable
+confinement: devmode
+grade: devel
 
 apps:
     cassandra:
@@ -52,7 +53,9 @@ parts:
             - artifacts
         source: https://github.com/apache/cassandra
         source-type: git
+        ant-openjdk-version: "8"
         override-build: |
+            candidate_version="latest"
             last_committed_tag="$(git describe --tags --abbrev=0)"
             last_committed_tag_ver="$(echo $last_committed_tag | sed 's/cassandra-//')"
             last_released_tag="$(snap info wethr | awk '$1 == "beta:" { print $2 }')"
@@ -61,7 +64,9 @@ parts:
             if [ "${last_committed_tag_ver}" != "${last_released_tag}" ]; then
               git fetch
               git checkout "${last_committed_tag}"
+              candidate_version="${last_committed_tag_ver}"
             fi
+            snapcraftctl set-version "${candidate_version}"
             snapcraftctl build
         build-packages:
             - ant-optional
