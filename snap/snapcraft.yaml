@@ -49,11 +49,12 @@ parts:
         plugin: ant
         ant-properties:
             dist.dir: $SNAPCRAFT_PART_INSTALL
+            use.jdk11: true
         ant-build-targets:
             - artifacts
         source: https://github.com/apache/cassandra
         source-type: git
-        ant-openjdk-version: "8"
+        ant-openjdk-version: "11"
         override-build: |
             candidate_version="latest"
             last_committed_tag="$(git describe --tags --abbrev=0)"
@@ -73,6 +74,7 @@ parts:
             - build-essential
             - python
             - sed
+            - openjdk-11-jdk
         stage-packages:
             # Copy some packages into the stage directory to steal their
             # pre-built binaries.
@@ -95,6 +97,7 @@ parts:
             - usr/sbin/cassandra
             - usr/share/cassandra/lib/*.jar
             - usr/lib/jvm
+            - etc/java-11-openjdk
             # awk, grep, and free are needed by cassandra-env.sh
             - usr/bin/awk
             - bin/grep

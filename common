@@ -39,6 +39,7 @@ case $(arch) in
         exit 1
         ;;
 esac
-export JAVA="$SNAP"/usr/lib/jvm/java-8-openjdk-"$ARCH"/jre/bin/java
+export JAVA_VERSION=11
+export JAVA="$SNAP"/usr/lib/jvm/java-"$JAVA_VERSION"-openjdk-"$ARCH"/bin/java
 export CASSANDRA_INCLUDE=
-export JAVA_VERSION=8
+export CASSANDRA_USE_JDK11=true
