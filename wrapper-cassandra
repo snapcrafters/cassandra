@@ -7,7 +7,7 @@
 [ -e "$CASSANDRA_DATA" ] || mkdir "$CASSANDRA_DATA"
 
 # Required config files. Use the default if one is not provided.
-for f in cassandra.yaml logback.xml cassandra-env.sh jvm-server.options jvm11-server.options jvm11-clients.options jvm-clients.options; do
+for f in cassandra.yaml logback.xml cassandra-env.sh jvm.options; do
     if [ ! -e "$CASSANDRA_CONF/$f" ]; then
         if [ "$f" = "cassandra-env.sh" ]; then
             # Libraries are in /usr/share/cassandra, not CASSANDRA_HOME
