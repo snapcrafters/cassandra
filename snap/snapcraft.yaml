@@ -55,6 +55,8 @@ parts:
         source-type: git
         ant-openjdk-version: "8"
         override-build: |
+            # make sure we will use openjdk 8 for the build
+            update-alternatives --set java $(update-alternatives --list java | grep 8-openjdk)
             candidate_version="latest"
             last_committed_tag="$(git describe --tags --abbrev=0)"
             last_committed_tag_ver="$(echo $last_committed_tag | sed 's/cassandra-//')"
