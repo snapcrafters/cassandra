@@ -64,7 +64,10 @@ parts:
                 https_host=$(echo $https_proxy | sed "s;:${https_port}$;;")
                 https_port=$(echo $https_port | sed 's;/;;g')
                 cat << EOF > $HOME/.m2/settings.xml
-            <settings>
+            <?xml version="1.0" encoding="UTF-8"?>
+            <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
               <proxies>
                <proxy>
                   <id>launchpad-proxy-http</id>
@@ -84,6 +87,9 @@ parts:
             </settings>
             EOF
             fi
+            cp $HOME/.m2/settings.xml $HOME/.ant/settings.xml
+            echo "Installed settings.xml:"
+            cat $HOME/.m2/settings.xml settings.xml
             # make sure we will use openjdk 8 for the build
             update-alternatives --set java $(update-alternatives --list java | grep 8-openjdk)
             candidate_version="latest"
