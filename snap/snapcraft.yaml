@@ -58,10 +58,10 @@ parts:
             if [ -n ${http_proxy} -a -n ${https_proxy} ]; then
                 mkdir -p $HOME/.m2
                 http_port=$(echo $http_proxy | rev | cut -d':' -f 1 | rev)
-                http_host=$(echo $http_proxy | sed "s/:${http_port}$//")
+                http_host=$(echo $http_proxy | sed "s;:${http_port}$;;")
                 http_port=$(echo $http_port | sed 's;/;;g')
                 https_port=$(echo $https_proxy | rev | cut -d':' -f 1 | rev)
-                https_host=$(echo $https_proxy | sed "s/:${https_port}$//")
+                https_host=$(echo $https_proxy | sed "s;:${https_port}$;;")
                 https_port=$(echo $https_port | sed 's;/;;g')
                 cat << EOF > $HOME/.m2/settings.xml
             <settings>
