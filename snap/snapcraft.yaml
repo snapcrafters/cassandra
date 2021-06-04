@@ -63,6 +63,9 @@ parts:
                 https_port=$(echo $https_proxy | rev | cut -d':' -f 1 | rev)
                 https_host=$(echo $https_proxy | sed "s;:${https_port}$;;")
                 https_port=$(echo $https_port | sed 's;/;;g')
+                # remove http(s):// from hosts
+                http_host=$(echo $http_host | sed 's;^https\?://;;')
+                https_host=$(echo $https_host | sed 's;^https\?://;;')
                 cat << EOF > $HOME/.m2/settings.xml
             <?xml version="1.0" encoding="UTF-8"?>
             <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
