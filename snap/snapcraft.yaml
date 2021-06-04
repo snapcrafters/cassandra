@@ -55,6 +55,33 @@ parts:
         source-type: git
         ant-openjdk-version: "8"
         override-build: |
+            if [ -n ${http_proxy} -a -n ${https_proxy} ]; then
+                mkdir -p $HOME/.m2
+                http_port=$(echo $http_proxy | rev | cut -d':' -f 1 | rev)
+                http_host=$(echo $http_proxy | sed 's/:${http_port}$//')
+                https_port=$(echo $https_proxy | rev | cut -d':' -f 1 | rev)
+                https_host=$(echo $https_proxy | sed 's/:${https_port}$//')
+                cat << EOF > $HOME/.m2/settings.xml
+            <settings>
+              <proxies>
+               <proxy>
+                  <id>launchpad-proxy-http</id>
+                  <active>true</active>
+                  <protocol>http</protocol>
+                  <host>${http_host}</host>
+                  <port>${http_port}</port>
+                </proxy>
+               <proxy>
+                  <id>launchpad-proxy-https</id>
+                  <active>true</active>
+                  <protocol>https</protocol>
+                  <host>${https_host}</host>
+                  <port>${https_port}</port>
+                </proxy>
+              </proxies>
+            </settings>
+            EOF
+            fi
             # make sure we will use openjdk 8 for the build
             update-alternatives --set java $(update-alternatives --list java | grep 8-openjdk)
             candidate_version="latest"
