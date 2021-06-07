@@ -55,6 +55,9 @@ parts:
         source-type: git
         ant-openjdk-version: "8"
         override-build: |
+            # Hacky trick to handle proxy settings for resolver-ant-tasks
+            # https://bugs.launchpad.net/launchpad-buildd/+bug/1702130
+            # https://maven.apache.org/resolver-ant-tasks/
             if [ -n ${http_proxy} -a -n ${https_proxy} ]; then
                 mkdir -p $HOME/.m2
                 http_port=$(echo $http_proxy | rev | cut -d':' -f 1 | rev)
