@@ -90,8 +90,6 @@ parts:
             </settings>
             EOF
             fi
-            mkdir -p $HOME/.ant
-            cp $HOME/.m2/settings.xml $HOME/.ant/settings.xml
             echo "Installed settings.xml:"
             cat $HOME/.m2/settings.xml
             # make sure we will use openjdk 8 for the build
