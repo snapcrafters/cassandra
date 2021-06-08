@@ -92,9 +92,9 @@ parts:
               </proxies>
             </settings>
             EOF
+                echo "Installed settings.xml:"
+                cat $HOME/.m2/settings.xml
             fi
-            echo "Installed settings.xml:"
-            cat $HOME/.m2/settings.xml
             # make sure we will use openjdk 8 for the build
             update-alternatives --set java $(update-alternatives --list java | grep 8-openjdk)
             candidate_version="latest"
