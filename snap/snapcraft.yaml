@@ -108,6 +108,9 @@ parts:
             fi
             snapcraftctl set-version "${candidate_version}"
             snapcraftctl build
+        override-stage: |
+            snapcraftctl stage
+            chmod +x usr/sbin/cassandra
         build-packages:
             - ant-optional
             - build-essential
