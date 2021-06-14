@@ -67,6 +67,8 @@ parts:
                 # remove http(s):// from hosts
                 http_host=$(echo $http_host | sed 's;^https\?://;;')
                 https_host=$(echo $https_host | sed 's;^https\?://;;')
+                non_proxy_hosts=$(echo $no_proxy | sed -e 's;https\?://;;g' -e 's/\s*,\s*/|/g')
+                non_proxy_hosts=${non_proxy_hosts:=localhost}
                 cat << EOF > $HOME/.m2/settings.xml
             <?xml version="1.0" encoding="UTF-8"?>
             <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
@@ -79,6 +81,7 @@ parts:
                   <protocol>http</protocol>
                   <host>${http_host}</host>
                   <port>${http_port}</port>
+                  <nonProxyHosts>${non_proxy_hosts}</nonProxyHosts>
                 </proxy>
                <proxy>
                   <id>launchpad-proxy-https</id>
@@ -86,6 +89,7 @@ parts:
                   <protocol>https</protocol>
                   <host>${https_host}</host>
                   <port>${https_port}</port>
+                  <nonProxyHosts>${non_proxy_hosts}</nonProxyHosts>
                 </proxy>
               </proxies>
             </settings>
