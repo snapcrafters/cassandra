@@ -10,7 +10,7 @@ description: |
   commodity hardware or cloud infrastructure make it a good platform for
   mission-critical data.
 
-confinement: devmode
+confinement: strict
 grade: devel
 
 apps:
