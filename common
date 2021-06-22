@@ -21,24 +21,7 @@ done
 
 export CLASSPATH
 
-case $(arch) in
-    x86_64)
-        export ARCH=amd64
-        ;;
-    aarch64)
-        export ARCH=arm64
-        ;;
-    ppc64le)
-        export ARCH=ppc64el
-        ;;
-    s390x)
-        export ARCH=s390x
-        ;;
-    *)
-        echo "Unsupported architecture $(arch)"
-        exit 1
-        ;;
-esac
+export ARCH=$(dpkg --print-architecture)
 export JAVA="$SNAP"/usr/lib/jvm/java-8-openjdk-"$ARCH"/jre/bin/java
 export CASSANDRA_INCLUDE=
 export JAVA_VERSION=8
