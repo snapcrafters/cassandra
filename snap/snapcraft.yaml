@@ -1,18 +1,17 @@
 name: cassandra
-version: latest
-version-script: git -C parts/cassandra/build describe --tags | sed 's/cassandra-//'
+# Set the version during the build based on a tag name
+adopt-info: cassandra
+base: core18
 summary: Manage massive amounts of data, fast, without losing sleep
 description: |
-  The Apache Cassandra database is the right choice when you need
-  scalability and high availability without compromising performance. Linear
-  scalability and proven fault-tolerance on commodity hardware or cloud
-  infrastructure make it the perfect platform for mission-critical
-  data.Cassandra's support for replicating across multiple datacenters is
-  best-in-class, providing lower latency for your users and the peace of
-  mind of knowing that you can survive regional outages.
+  Apache Cassandra is an open source NoSQL distributed database trusted by
+  thousands of companies for scalability and high availability without
+  compromising performance. Linear scalability and proven fault-tolerance on
+  commodity hardware or cloud infrastructure make it a good platform for
+  mission-critical data.
 
 confinement: strict
-grade: stable
+grade: devel
 
 apps:
     cassandra:
@@ -52,7 +51,55 @@ parts:
             - artifacts
         source: https://github.com/apache/cassandra
         source-type: git
+        ant-openjdk-version: "8"
         override-build: |
+            # Hacky trick to handle proxy settings for resolver-ant-tasks
+            # https://bugs.launchpad.net/launchpad-buildd/+bug/1702130
+            # https://maven.apache.org/resolver-ant-tasks/
+            if [ -n ${http_proxy} -a -n ${https_proxy} ]; then
+                mkdir -p $HOME/.m2
+                http_port=$(echo $http_proxy | rev | cut -d':' -f 1 | rev)
+                http_host=$(echo $http_proxy | sed "s;:${http_port}$;;")
+                http_port=$(echo $http_port | sed 's;/;;g')
+                https_port=$(echo $https_proxy | rev | cut -d':' -f 1 | rev)
+                https_host=$(echo $https_proxy | sed "s;:${https_port}$;;")
+                https_port=$(echo $https_port | sed 's;/;;g')
+                # remove http(s):// from hosts
+                http_host=$(echo $http_host | sed 's;^https\?://;;')
+                https_host=$(echo $https_host | sed 's;^https\?://;;')
+                non_proxy_hosts=$(echo $no_proxy | sed -e 's;https\?://;;g' -e 's/\s*,\s*/|/g')
+                non_proxy_hosts=${non_proxy_hosts:=localhost}
+                cat << EOF > $HOME/.m2/settings.xml
+            <?xml version="1.0" encoding="UTF-8"?>
+            <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+              <proxies>
+               <proxy>
+                  <id>launchpad-proxy-http</id>
+                  <active>true</active>
+                  <protocol>http</protocol>
+                  <host>${http_host}</host>
+                  <port>${http_port}</port>
+                  <nonProxyHosts>${non_proxy_hosts}</nonProxyHosts>
+                </proxy>
+               <proxy>
+                  <id>launchpad-proxy-https</id>
+                  <active>true</active>
+                  <protocol>https</protocol>
+                  <host>${https_host}</host>
+                  <port>${https_port}</port>
+                  <nonProxyHosts>${non_proxy_hosts}</nonProxyHosts>
+                </proxy>
+              </proxies>
+            </settings>
+            EOF
+                echo "Installed settings.xml:"
+                cat $HOME/.m2/settings.xml
+            fi
+            # make sure we will use openjdk 8 for the build
+            update-alternatives --set java $(update-alternatives --list java | grep 8-openjdk)
+            candidate_version="latest"
             last_committed_tag="$(git describe --tags --abbrev=0)"
             last_committed_tag_ver="$(echo $last_committed_tag | sed 's/cassandra-//')"
             last_released_tag="$(snap info wethr | awk '$1 == "beta:" { print $2 }')"
@@ -61,8 +108,13 @@ parts:
             if [ "${last_committed_tag_ver}" != "${last_released_tag}" ]; then
               git fetch
               git checkout "${last_committed_tag}"
+              candidate_version="${last_committed_tag_ver}"
             fi
+            snapcraftctl set-version "${candidate_version}"
             snapcraftctl build
+        override-stage: |
+            snapcraftctl stage
+            chmod +x usr/sbin/cassandra
         build-packages:
             - ant-optional
             - build-essential

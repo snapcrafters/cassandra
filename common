@@ -20,3 +20,8 @@ for jar in $SNAP/usr/share/cassandra/lib/*.jar; do
 done
 
 export CLASSPATH
+
+export ARCH=$(dpkg --print-architecture)
+export JAVA="$SNAP"/usr/lib/jvm/java-8-openjdk-"$ARCH"/jre/bin/java
+export CASSANDRA_INCLUDE=
+export JAVA_VERSION=8
