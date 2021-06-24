@@ -52,6 +52,8 @@ parts:
         source: https://github.com/apache/cassandra
         source-type: git
         ant-openjdk-version: "8"
+        build-environment:
+            - ANT_OPTS: "$ANT_OPTS -Xmx4g"
         override-build: |
             # Hacky trick to handle proxy settings for resolver-ant-tasks
             # https://bugs.launchpad.net/launchpad-buildd/+bug/1702130
@@ -111,6 +113,7 @@ parts:
               candidate_version="${last_committed_tag_ver}"
             fi
             snapcraftctl set-version "${candidate_version}"
+            sed -i 's/maxmemory="256m"/maxmemory="512m"/' build.xml
             snapcraftctl build
         override-stage: |
             snapcraftctl stage
