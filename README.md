@@ -1,3 +1,11 @@
+# This repository is currently unmaintained
+
+The snap available in the snapstore is currently built from
+https://code.launchpad.net/cassandra-snap
+
+The launchpad repository is currently orphan. Please, file an issue in this
+repository if you are willing to adopt it.
+
 <h1 align="center">
   <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Cassandra_logo.svg/1280px-Cassandra_logo.svg.png" alt="Cassandra" height="256px">
 </h1>
